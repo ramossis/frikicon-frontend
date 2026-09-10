@@ -1,0 +1,98 @@
+@layer vuetify-overrides {
+  code, pre, .v-code {
+    font-family: var(--v-font-mono);
+  }
+}
+
+body {
+  background-color: #1a0e0a;
+  color: #f1f5f9;
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(224, 159, 62, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(0, 180, 216, 0.1) 0%, transparent 50%),
+    url('/images/background.jpeg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app, .v-application, .friki-app, .admin-layout {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a0e0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #e09f3e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffaa1d;
+}
+
+/* FrikiKon Special Styles */
+.gold-text-glow {
+  color: #ffb703;
+  text-shadow: 
+    0 0 10px rgba(255, 183, 3, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.9);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.gold-title-banner {
+  font-weight: 900;
+  color: #ffaa1d;
+  text-transform: uppercase;
+  text-shadow: 
+    3px 3px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    1px 1px 0px #000,
+    0 0 20px rgba(255, 170, 29, 0.5);
+  letter-spacing: 2px;
+}
+
+.friki-panel-box {
+  background: rgba(43, 27, 20, 0.85);
+  border: 2px solid #00b4d8;
+  box-shadow: 0 0 20px rgba(0, 180, 216, 0.25);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+}
+
+.friki-card-item {
+  background: #23150f;
+  border: 1px solid rgba(224, 159, 62, 0.3);
+  transition: all 0.25s ease-in-out;
+}
+.friki-card-item:hover {
+  border-color: #ffaa1d;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 170, 29, 0.2);
+}
