@@ -353,11 +353,11 @@ async function submitRegistration() {
       emit('registered', res.data);
       close();
     } else {
-      errorMessage.value = res.error || 'Ocurrió un error al procesar el registro.';
+      errorMessage.value = res.message || res.error || 'Ocurrió un error al procesar el registro.';
     }
   } catch (err) {
     console.error(err);
-    errorMessage.value = participantStore.error || err.response?.data?.error || 'Error al conectar con el servidor. Verifica el archivo cargado y los datos.';
+    errorMessage.value = participantStore.error || 'Error al conectar con el servidor. Verifica el archivo cargado y los datos.';
   } finally {
     loading.value = false;
   }

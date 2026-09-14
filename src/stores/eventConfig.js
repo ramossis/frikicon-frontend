@@ -16,9 +16,9 @@ export const useEventConfigStore = defineStore('eventConfig', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.get('/admin/config');
-        if (response.data.success && response.data.data) {
-          const d = response.data.data;
+        const { data } = await http.get('/admin/config');
+        if (data.success && data.data) {
+          const d = data.data;
           this.eventConfig = {
             isRegistrationOpen: d.isRegistrationOpen ?? true,
             registrationDeadLine: d.registrationDeadLine
@@ -26,9 +26,9 @@ export const useEventConfigStore = defineStore('eventConfig', {
               : '',
           };
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al cargar configuración.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al cargar configuración.';
         throw err;
       } finally {
         this.loading = false;
@@ -39,13 +39,13 @@ export const useEventConfigStore = defineStore('eventConfig', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.put('/admin/config', config);
-        if (response.data.success) {
+        const { data } = await http.put('/admin/config', config);
+        if (data.success) {
           this.eventConfig = { ...config };
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al guardar configuración.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al guardar configuración.';
         throw err;
       } finally {
         this.loading = false;

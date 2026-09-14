@@ -108,11 +108,11 @@ async function handleLogin() {
     if (res.success && res.token) {
       router.push('/admin');
     } else {
-      errorMessage.value = res.error || 'Credenciales inválidas.';
+      errorMessage.value = res.message || res.error || 'Credenciales inválidas.';
     }
   } catch (err) {
     console.error(err);
-    errorMessage.value = authStore.error || err.response?.data?.error || 'Error al conectar con el servidor.';
+    errorMessage.value = authStore.error || 'Error al conectar con el servidor.';
   } finally {
     loading.value = false;
   }

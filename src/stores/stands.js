@@ -13,27 +13,27 @@ export const useStandStore = defineStore('stands', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.get('/stand');
-        if (response.data.success) {
-          this.stands = response.data.data || [];
+        const { data } = await http.get('/stand');
+        if (data.success) {
+          this.stands = data.data || [];
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al cargar los stands.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al cargar los stands.';
         throw err;
       } finally {
         this.loading = false;
       }
     },
 
-    async registerStand(data) {
+    async registerStand(payload) {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.post('/stand/register', data);
-        return response.data;
+        const { data } = await http.post('/stand/register', payload);
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al registrar stand.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar stand.';
         throw err;
       } finally {
         this.loading = false;
@@ -44,13 +44,13 @@ export const useStandStore = defineStore('stands', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.delete(`/stand/${id}`);
-        if (response.data.success) {
+        const { data } = await http.delete(`/stand/${id}`);
+        if (data.success) {
           this.stands = this.stands.filter((s) => s.id !== id);
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al eliminar stand.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al eliminar stand.';
         throw err;
       } finally {
         this.loading = false;

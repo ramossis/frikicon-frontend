@@ -17,14 +17,14 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.post('/admin/login', { username, password });
-        if (response.data.success && response.data.token) {
-          this.token = response.data.token;
-          localStorage.setItem('adminToken', response.data.token);
+        const { data } = await http.post('/admin/login', { username, password });
+        if (data.success && data.token) {
+          this.token = data.token;
+          localStorage.setItem('adminToken', data.token);
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al autenticar.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al autenticar.';
         throw err;
       } finally {
         this.loading = false;

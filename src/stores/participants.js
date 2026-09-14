@@ -14,45 +14,45 @@ export const useParticipantStore = defineStore('participants', {
       this.error = null;
       try {
         const params = category ? { category } : {};
-        const response = await http.get('/participant/list', { params });
-        if (response.data.success) {
-          this.participants = response.data.data || [];
+        const { data } = await http.get('/participant/list', { params });
+        if (data.success) {
+          this.participants = data.data || [];
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al cargar los participantes.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al cargar los participantes.';
         throw err;
       } finally {
         this.loading = false;
       }
     },
 
-    async registerParticipant(data) {
+    async registerParticipant(payload) {
       this.loading = true;
       this.error = null;
       try {
         const formData = new FormData();
-        formData.append('fullName', data.fullName);
-        formData.append('age', data.age.toString());
-        formData.append('phone', data.phone);
-        formData.append('category', data.category);
-        formData.append('categoryData', JSON.stringify(data.categoryData || {}));
+        formData.append('fullName', payload.fullName);
+        formData.append('age', payload.age.toString());
+        formData.append('phone', payload.phone);
+        formData.append('category', payload.category);
+        formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
 
-        if (data.photoFile) {
-          formData.append('photoUrl', data.photoFile);
+        if (payload.photoFile) {
+          formData.append('photoUrl', payload.photoFile);
         }
-        if (data.audioFile) {
-          formData.append('audioUrl', data.audioFile);
+        if (payload.audioFile) {
+          formData.append('audioUrl', payload.audioFile);
         }
 
-        const response = await http.post('/participant/register', formData, {
+        const { data } = await http.post('/participant/register', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al registrar participante.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar participante.';
         throw err;
       } finally {
         this.loading = false;
@@ -63,13 +63,13 @@ export const useParticipantStore = defineStore('participants', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await http.delete(`/participant/delete/${id}`);
-        if (response.data.success) {
+        const { data } = await http.delete(`/participant/delete/${id}`);
+        if (data.success) {
           this.participants = this.participants.filter((p) => p.id !== id);
         }
-        return response.data;
+        return data;
       } catch (err) {
-        this.error = err.response?.data?.error || 'Error al eliminar participante.';
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al eliminar participante.';
         throw err;
       } finally {
         this.loading = false;
@@ -78,8 +78,8 @@ export const useParticipantStore = defineStore('participants', {
 
     async getVoucher(id) {
       try {
-        const response = await http.get(`/participant/voucher/${id}`);
-        return response.data;
+        const { data } = await http.get(`/participant/voucher/${id}`);
+        return data;
       } catch (err) {
         throw err;
       }

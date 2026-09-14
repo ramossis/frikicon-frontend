@@ -331,11 +331,11 @@ async function submitStand() {
       emit('registered', res.data);
       close();
     } else {
-      errorMessage.value = res.error || 'No se pudo registrar el stand.';
+      errorMessage.value = res.message || res.error || 'No se pudo registrar el stand.';
     }
   } catch (err) {
     console.error(err);
-    errorMessage.value = standStore.error || err.response?.data?.error || 'Error al procesar el registro del stand.';
+    errorMessage.value = standStore.error || 'Error al procesar el registro del stand.';
   } finally {
     loading.value = false;
   }

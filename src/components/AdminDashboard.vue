@@ -421,12 +421,12 @@ async function saveEventConfig() {
   try {
     const res = await eventConfigStore.updateConfig(eventConfig.value);
     if (res.success) {
-      showAlert('Configuración del evento actualizada con éxito.', 'success');
+      showAlert(res.message || 'Configuración del evento actualizada con éxito.', 'success');
     } else {
-      showAlert(res.error || 'No se pudo guardar la configuración.', 'error');
+      showAlert(res.message || res.error || 'No se pudo guardar la configuración.', 'error');
     }
   } catch (err) {
-    showAlert('Error al guardar la configuración.', 'error');
+    showAlert(eventConfigStore.error || 'Error al guardar la configuración.', 'error');
   }
 }
 
