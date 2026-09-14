@@ -124,8 +124,8 @@
           <template v-if="formData.category === 'KARAOKE'">
             <v-text-field
               v-model="categoryData.songName"
-              label="Nombre de la Canción y Serie *"
-              placeholder="Ej: Unravel (Tokyo Ghoul) / Blue Bird (Naruto)"
+              label="Nombre de la Canción -  Serie *"
+              placeholder="Ej: Unravel (Tokyo Ghoul) - Blue Bird (Naruto)"
               variant="outlined"
               density="comfortable"
               :rules="[v => !!v || 'Ingresa el nombre de la canción']"
