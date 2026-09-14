@@ -27,38 +27,34 @@ export const useParticipantStore = defineStore('participants', {
       }
     },
 
-    async registerParticipant(payload) {
-      this.loading = true;
-      this.error = null;
-      try {
-        const formData = new FormData();
-        formData.append('fullName', payload.fullName);
-        formData.append('age', payload.age.toString());
-        formData.append('phone', payload.phone);
-        formData.append('category', payload.category);
-        formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
+ async registerParticipant(payload) {
+  this.loading = true;
+  this.error = null;
+  try {
+    const formData = new FormData();
+    formData.append('fullName', payload.fullName);
+    formData.append('age', payload.age.toString());
+    formData.append('phone', payload.phone);
+    formData.append('category', payload.category);
+    formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
 
-        if (payload.photoFile) {
-          formData.append('photoUrl', payload.photoFile);
-        }
-        if (payload.audioFile) {
-          formData.append('audioUrl', payload.audioFile);
-        }
+    if (payload.photoFile) {
+      formData.append('photoUrl', payload.photoFile);
+    }
+    if (payload.audioFile) {
+      formData.append('audioUrl', payload.audioFile);
+    }
 
-        const { data } = await http.post('/participant/register', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        return data;
-      } catch (err) {
-        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar participante.';
-        throw err;
-      } finally {
-        this.loading = false;
-      }
-    },
-
+    // ELIMINADO EL OBJETO HEADERS: Axios pondrá el multipart/form-data y boundary automáticamente
+    const { data } = await http.post('/participant/register', formData);
+    return data;
+  } catch (err) {
+    this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar participante.';
+    throw err;
+  } finally {
+    this.loading = false;
+  }
+}
     async deleteParticipant(id) {
       this.loading = true;
       this.error = null;
