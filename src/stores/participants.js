@@ -54,7 +54,7 @@ export const useParticipantStore = defineStore('participants', {
   } finally {
     this.loading = false;
   }
-}
+},
     async deleteParticipant(id) {
       this.loading = true;
       this.error = null;
