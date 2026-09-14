@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { http } from '@/utils/axios';
-
+import { dataURLtoFile } from "../utils/dataURLtoFile";
 export const useParticipantStore = defineStore('participants', {
   state: () => ({
     participants: [],
@@ -38,12 +38,15 @@ export const useParticipantStore = defineStore('participants', {
     formData.append('category', payload.category);
     formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
 
-    if (payload.photoFile) {
-      formData.append('photoUrl', payload.photoFile);
-    }
-    if (payload.audioFile) {
-      formData.append('audioUrl', payload.audioFile);
-    }
+   if (payload.photoFile) {
+          const photoFileConverted = dataURLtoFile(payload.photoFile, 'photo.jpg');
+          formData.append('photoUrl', photoFileConverted);
+        }
+        
+        if (payload.audioFile) {
+          const audioFileConverted = dataURLtoFile(payload.audioFile, 'audio.mp3');
+          formData.append('audioUrl', audioFileConverted);
+        }
 
     // ELIMINADO EL OBJETO HEADERS: Axios pondrá el multipart/form-data y boundary automáticamente
     const { data } = await http.post('/participant/register', formData);
