@@ -4,10 +4,10 @@
     <v-app-bar color="#291a13" class="px-4 border-b border-gold" elevation="4" height="64">
       <div class="d-flex align-center cursor-pointer ga-3" @click="goHome">
         <v-img
-          src="/images/LOGO PRINCIPAL.png"
-          alt="FRIKIKON ORURO"
-          max-height="45"
-          max-width="120"
+          src="/images/LOGO FC PRINCIPAL.png"
+          alt="FRIKI-CON ORURO"
+          max-height="48"
+          max-width="140"
           contain
         ></v-img>
       </div>

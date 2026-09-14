@@ -96,3 +96,72 @@ body::before {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(255, 170, 29, 0.2);
 }
+
+/* Fix Dark Text on Dark Background Issues (Textos en Oscuro) */
+.text-medium-emphasis {
+  color: rgba(241, 245, 249, 0.88) !important;
+}
+
+.text-high-emphasis {
+  color: #ffffff !important;
+}
+
+.v-card-text, .v-card-title, .v-card-subtitle {
+  color: #f1f5f9 !important;
+}
+
+.v-label, .v-field-label {
+  color: #e2e8f0 !important;
+  opacity: 0.95 !important;
+}
+
+.v-field__input {
+  color: #ffffff !important;
+}
+
+.v-input--density-comfortable .v-field__input,
+.v-input--density-compact .v-field__input {
+  color: #ffffff !important;
+}
+
+.v-table {
+  background-color: transparent !important;
+  color: #f8fafc !important;
+}
+
+.v-table th {
+  color: #ffaa1d !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid rgba(224, 159, 62, 0.3) !important;
+}
+
+.v-table td {
+  color: #f1f5f9 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.v-list {
+  background-color: #2b1b14 !important;
+  color: #ffffff !important;
+}
+
+.v-list-item {
+  color: #ffffff !important;
+}
+.v-list-item-title {
+  color: #ffffff !important;
+}
+
+.v-dialog .v-card {
+  border: 1px solid rgba(224, 159, 62, 0.5) !important;
+}
+
+.v-chip {
+  font-weight: 600;
+}
+
+.v-checkbox .v-label {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+

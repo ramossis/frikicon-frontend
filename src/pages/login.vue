@@ -3,9 +3,9 @@
     <v-card color="#2b1b14" max-width="450" class="w-100 rounded-2xl border-gold pa-6 shadow-2xl">
       <div class="text-center mb-6">
         <v-img
-          src="/images/LOGO PRINCIPAL.png"
+          src="/images/LOGO FC PRINCIPAL.png"
           alt="FriKiKon"
-          max-height="65"
+          max-height="75"
           contain
           class="mx-auto mb-4"
         ></v-img>

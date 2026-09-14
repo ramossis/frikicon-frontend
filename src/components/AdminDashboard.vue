@@ -52,6 +52,43 @@
               <v-btn icon="mdi-refresh" variant="text" color="primary" title="Recargar Lista" @click="loadParticipants"></v-btn>
             </div>
 
+            <!-- Botones PDF por categoría -->
+            <div class="d-flex flex-wrap ga-2 align-center">
+              <v-btn
+                prepend-icon="mdi-file-pdf-box"
+                color="#e09f3e"
+                variant="outlined"
+                size="small"
+                class="font-weight-bold"
+                title="Exportar lista Cosplay a PDF"
+                @click="exportParticipantsPDF('COSPLAY')"
+              >
+                PDF Cosplay
+              </v-btn>
+              <v-btn
+                prepend-icon="mdi-file-pdf-box"
+                color="secondary"
+                variant="outlined"
+                size="small"
+                class="font-weight-bold"
+                title="Exportar lista Karaoke a PDF"
+                @click="exportParticipantsPDF('KARAOKE')"
+              >
+                PDF Karaoke
+              </v-btn>
+              <v-btn
+                prepend-icon="mdi-file-pdf-box"
+                color="success"
+                variant="outlined"
+                size="small"
+                class="font-weight-bold"
+                title="Exportar lista Dibujo a PDF"
+                @click="exportParticipantsPDF('DRAWING')"
+              >
+                PDF Dibujo
+              </v-btn>
+            </div>
+
             <div class="w-100 max-w-300">
               <v-text-field
                 v-model="searchQuery"
@@ -175,7 +212,20 @@
         <div v-if="currentTab === 'stands'">
           <div class="d-flex justify-space-between align-center mb-6">
             <h3 class="text-h6 font-weight-bold text-white">Lista de Stands Reservados</h3>
-            <v-btn icon="mdi-refresh" variant="text" color="primary" title="Recargar Stands" @click="loadStands"></v-btn>
+            <div class="d-flex align-center ga-2">
+              <v-btn
+                prepend-icon="mdi-file-pdf-box"
+                color="info"
+                variant="outlined"
+                size="small"
+                class="font-weight-bold"
+                title="Exportar lista de Stands a PDF"
+                @click="exportStandsPDF()"
+              >
+                PDF Stands
+              </v-btn>
+              <v-btn icon="mdi-refresh" variant="text" color="primary" title="Recargar Stands" @click="loadStands"></v-btn>
+            </div>
           </div>
 
           <v-progress-linear v-if="loadingStands" indeterminate color="secondary" class="mb-4"></v-progress-linear>
@@ -294,6 +344,8 @@ import { useAuthStore } from '@/stores/auth';
 import { useParticipantStore } from '@/stores/participants';
 import { useStandStore } from '@/stores/stands';
 import { useEventConfigStore } from '@/stores/eventConfig';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const emit = defineEmits(['logout', 'show-voucher']);
 
@@ -429,6 +481,119 @@ function showAlert(msg, type) {
 function logout() {
   authStore.logout();
   emit('logout');
+}
+
+// ─── PDF EXPORT ────────────────────────────────────────────────────────────────
+
+const CATEGORY_LABELS = {
+  COSPLAY: 'Cosplay',
+  KARAOKE: 'Karaoke',
+  DRAWING: 'Dibujo',
+};
+
+const CATEGORY_COLORS = {
+  COSPLAY: [224, 159, 62],
+  KARAOKE: [138, 43, 226],
+  DRAWING: [30, 150, 100],
+};
+
+function exportParticipantsPDF(category) {
+  const label = CATEGORY_LABELS[category] || category;
+  const color = CATEGORY_COLORS[category] || [33, 150, 243];
+
+  const list = participants.value.filter((p) => p.category === category);
+
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  doc.setFillColor(...color);
+  doc.rect(0, 0, 210, 22, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`FRIKI-CON — Lista ${label}`, 14, 14);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(240, 240, 240);
+  const now = new Date().toLocaleString('es-ES');
+  doc.text(`Generado: ${now}  |  Total: ${list.length}`, 14, 20);
+
+  const detailHeader = category === 'COSPLAY' ? 'Personaje' : category === 'KARAOKE' ? 'Canción' : 'Nombre Dibujo';
+
+  const rows = list.map((p, i) => {
+    let detalle = '-';
+    if (category === 'COSPLAY') detalle = p.specificData?.characterName || '-';
+    else if (category === 'KARAOKE') detalle = p.specificData?.songName || '-';
+    else if (category === 'DRAWING') detalle = p.specificData?.drawingName || '-';
+    return [i + 1, p.stageOrder ? `#${p.stageOrder}` : '-', p.fullName || '-', p.age ? `${p.age} años` : '-', p.phone || '-', detalle];
+  });
+
+  autoTable(doc, {
+    startY: 28,
+    head: [['#', 'Turno', 'Participante', 'Edad', 'Teléfono', detailHeader]],
+    body: rows,
+    styles: { fontSize: 9, cellPadding: 3 },
+    headStyles: { fillColor: color, textColor: [255, 255, 255], fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [248, 248, 248] },
+    margin: { left: 14, right: 14 },
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text(`Página ${i} de ${pageCount}`, 196, 290, { align: 'right' });
+  }
+
+  doc.save(`friki-con_lista_${label.toLowerCase()}.pdf`);
+}
+
+function exportStandsPDF() {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const color = [41, 128, 185];
+
+  doc.setFillColor(...color);
+  doc.rect(0, 0, 210, 22, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FRIKI-CON — Lista de Stands', 14, 14);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(240, 240, 240);
+  const now = new Date().toLocaleString('es-ES');
+  doc.text(`Generado: ${now}  |  Total: ${stands.value.length}`, 14, 20);
+
+  const rows = stands.value.map((s, i) => [
+    i + 1,
+    s.standNumber ? `Stand #${s.standNumber}` : '-',
+    s.businessName || '-',
+    s.participantName || '-',
+    s.legalRepresentative || '-',
+    s.area || '-',
+  ]);
+
+  autoTable(doc, {
+    startY: 28,
+    head: [['#', 'Stand', 'Negocio / Marca', 'Encargado', 'Rep. Legal', 'Área']],
+    body: rows,
+    styles: { fontSize: 9, cellPadding: 3 },
+    headStyles: { fillColor: color, textColor: [255, 255, 255], fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [248, 248, 248] },
+    margin: { left: 14, right: 14 },
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text(`Página ${i} de ${pageCount}`, 196, 290, { align: 'right' });
+  }
+
+  doc.save('friki-con_lista_stands.pdf');
 }
 </script>
 

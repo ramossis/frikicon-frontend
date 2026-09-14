@@ -6,7 +6,7 @@
       <div ref="pdfRef" class="pdf-ticket-container">
         <div class="ticket-header mb-3">
           <img
-            src="/images/LOGO PRINCIPAL.png"
+            src="/images/LOGO FC PRINCIPAL.png"
             alt="FRIKI-CON"
             class="pdf-logo mx-auto mb-2"
           />

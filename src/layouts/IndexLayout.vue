@@ -30,10 +30,10 @@
     <v-container class="py-12 text-center border-t">
       <h3 class="text-h6 font-weight-bold text-amber-lighten-2 mb-6">INSTITUCIONES Y AUSPICIADORES OFICIALES</h3>
       <div class="d-flex flex-wrap align-center justify-center ga-8">
-        <v-img src="/images/ESCUDO-LETRAS-BLANCAS.png" max-height="70" max-width="160" contain></v-img>
-        <v-img src="/images/Oficial con epigrafe bicentenario y sombra paralela.png" max-height="70" max-width="180" contain></v-img>
+        <v-img src="/images/ESCUDO-LETRAS-BLANCAS.png" max-height="170" max-width="190" contain></v-img>
+        <!-- <v-img src="/images/Oficial con epigrafe bicentenario y sombra paralela.png" max-height="70" max-width="180" contain></v-img> -->
         <v-img src="/images/Popular con epígrafe blanco y amarillo.png" max-height="70" max-width="180" contain></v-img>
-        <v-img src="/images/LOGO FC alternativo.png" max-height="70" max-width="160" contain></v-img>
+        <!-- <v-img src="/images/LOGO FC alternativo.png" max-height="70" max-width="160" contain></v-img> -->
       </div>
     </v-container>
 
@@ -41,7 +41,7 @@
     <footer class="py-8 text-center text-medium-emphasis text-body-2 bg-surface-variant border-t">
       <v-container>
         <div class="d-flex align-center justify-center ga-3 mb-4">
-          <v-img src="/images/LOGO blanco.png" max-height="45" max-width="130" contain></v-img>
+          <v-img src="/images/LOGO FC fondo oscuro.png" max-height="55" max-width="160" contain></v-img>
         </div>
         <p class="mb-2">&copy; 2024 FriKiKon Oruro - Todos los derechos reservados. Un evento de Cultura y Turismo.</p>
         <p class="text-caption text-amber-lighten-2">Cultura Anime, Manga, Cosplay, Gaming & Arte Pop.</p>

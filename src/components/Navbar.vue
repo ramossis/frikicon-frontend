@@ -4,13 +4,14 @@
       <div class="d-flex align-center justify-space-between flex-nowrap ga-2">
         
         <!-- Left Logo & Branding -->
-        <div class="d-flex align-center cursor-pointer flex-shrink-0" @click="scrollTo('inicio')">
+        <div class="d-flex align-center cursor-pointer flex-shrink-0 ga-2" @click="scrollTo('inicio')">
           <v-img
-            src="/images/LOGO PRINCIPAL.png"
-            alt="FRIKIKON ORURO"
-            max-height="42"
-            max-width="120"
+            src="/images/LOGO FC PRINCIPAL.png"
+            alt="FRIKI-CON ORURO"
+            max-height="46"
+            max-width="140"
             contain
+            class="header-logo"
           ></v-img>
         </div>
 
@@ -31,7 +32,7 @@
           <a class="nav-link" @click="scrollTo('stands')">Stands</a>
           <a class="nav-link" @click="scrollTo('concursos')">Asistencias</a>
           <a class="nav-link" @click="scrollTo('mapa')">Mapa del Evento</a>
-          <a class="nav-link" @click="scrollTo('reglas')">Contacto</a>
+          <a class="nav-link" @click="scrollTo('reglas')">Contacto y Reglas</a>
         </div>
 
         <!-- Search Bar & Action Buttons -->
@@ -40,11 +41,11 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Buscar"
+              placeholder="Buscar..."
               class="search-input"
               @keyup.enter="handleSearch"
             />
-            <button class="search-btn" @click="handleSearch">
+            <button class="search-btn" title="Buscar" @click="handleSearch">
               <v-icon size="18">mdi-magnify</v-icon>
             </button>
           </div>
@@ -53,7 +54,7 @@
             color="primary"
             variant="flat"
             size="small"
-            class="font-weight-bold text-none rounded-lg px-2 px-sm-3"
+            class="font-weight-bold text-none rounded-lg px-2 px-sm-3 text-black"
             prepend-icon="mdi-pencil-box"
             @click="$emit('open-participant-register')"
           >
@@ -77,7 +78,7 @@
             color="primary"
             size="small"
             title="Acceso Admin"
-            @click="$emit('open-admin-login')"
+            @click="handleAdminClick"
           ></v-btn>
 
           <!-- Hamburger Menu Button for Mobile -->
@@ -101,7 +102,7 @@
             <a class="nav-link text-center py-2" @click="scrollToAndClose('stands')">Stands</a>
             <a class="nav-link text-center py-2" @click="scrollToAndClose('concursos')">Asistencias</a>
             <a class="nav-link text-center py-2" @click="scrollToAndClose('mapa')">Mapa del Evento</a>
-            <a class="nav-link text-center py-2" @click="scrollToAndClose('reglas')">Contacto</a>
+            <a class="nav-link text-center py-2" @click="scrollToAndClose('reglas')">Contacto y Reglas</a>
             <v-btn
               color="secondary"
               variant="outlined"
@@ -122,16 +123,30 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
-defineEmits(['open-participant-register', 'open-stand-register', 'open-admin-login']);
+const emit = defineEmits(['open-participant-register', 'open-stand-register', 'open-admin-login']);
+
+const router = useRouter();
+const route = useRoute();
+const authStore = useAuthStore();
 
 const searchQuery = ref('');
 const mobileMenuOpen = ref(false);
 
-function scrollTo(id) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' });
+async function scrollTo(id) {
+  if (route.path !== '/') {
+    await router.push('/');
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  } else {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
 
@@ -140,9 +155,28 @@ function scrollToAndClose(id) {
   mobileMenuOpen.value = false;
 }
 
+function handleAdminClick() {
+  if (authStore.isAuthenticated) {
+    router.push('/admin');
+  } else {
+    emit('open-admin-login');
+  }
+}
+
 function handleSearch() {
-  if (searchQuery.value) {
-    alert(`Buscando: ${searchQuery.value}`);
+  if (!searchQuery.value) return;
+  const q = searchQuery.value.toLowerCase();
+  
+  if (q.includes('stand') || q.includes('tienda') || q.includes('local') || q.includes('artesano')) {
+    scrollTo('stands');
+  } else if (q.includes('mapa') || q.includes('ubica')) {
+    scrollTo('mapa');
+  } else if (q.includes('regla') || q.includes('base') || q.includes('contacto') || q.includes('info')) {
+    scrollTo('reglas');
+  } else if (q.includes('cosplay') || q.includes('karaoke') || q.includes('dibujo') || q.includes('concurso')) {
+    scrollTo('concursos');
+  } else {
+    scrollTo('inicio');
   }
 }
 </script>
@@ -156,6 +190,13 @@ function handleSearch() {
   backdrop-filter: blur(10px);
 }
 
+.header-logo {
+  transition: transform 0.2s ease;
+}
+.header-logo:hover {
+  transform: scale(1.04);
+}
+
 .border-gold {
   border: 1px solid rgba(224, 159, 62, 0.5) !important;
 }
@@ -165,22 +206,23 @@ function handleSearch() {
 }
 
 .nav-link {
-  color: #e2e8f0;
+  color: #f1f5f9;
   text-decoration: none;
   font-size: 0.95rem;
-  padding: 6px 10px;
+  font-weight: 600;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .nav-link:hover {
   color: #ffaa1d;
-  background: rgba(255, 170, 29, 0.1);
+  background: rgba(255, 170, 29, 0.15);
 }
 
 .search-box {
   background: #ffffff;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 2px 4px 2px 10px;
   border: 1px solid #cbd5e1;
   overflow: hidden;
@@ -189,21 +231,24 @@ function handleSearch() {
 .search-input {
   border: none;
   outline: none;
-  color: #1e293b;
+  color: #0f172a;
   font-size: 0.85rem;
-  width: 110px;
+  width: 120px;
+}
+.search-input::placeholder {
+  color: #64748b;
 }
 
 .search-btn {
   background: #f1f5f9;
   border: none;
-  color: #64748b;
+  color: #475569;
   padding: 4px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
 }
 .search-btn:hover {
   background: #e2e8f0;
-  color: #1e293b;
+  color: #0f172a;
 }
 </style>

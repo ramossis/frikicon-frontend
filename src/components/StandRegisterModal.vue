@@ -103,7 +103,7 @@
                   <v-icon size="18" color="secondary">mdi-map-marker-radius</v-icon>
                   Selecciona la ubicación en el mapa *
                 </span>
-                <span class="text-caption text-grey">Haz clic en el mapa para fijar el punto</span>
+                <span class="text-caption text-amber-lighten-3 font-weight-medium">Haz clic en el mapa para fijar el punto</span>
               </div>
 
               <!-- Contenedor del Mapa Interactivo (OpenStreetMap / Leaflet integrable o selector visual) -->
@@ -151,7 +151,7 @@
 
           <v-card variant="tonal" color="surface-bright" class="pa-4 rounded-lg border mb-2">
             <div class="rules-scrollable border pa-3 rounded bg-surface mb-3" style="max-height: 140px; overflow-y: auto;">
-              <ul class="pl-4 text-body-2 text-medium-emphasis">
+              <ul class="pl-4 text-body-2 text-white font-weight-medium">
                 <li v-for="(ruleItem, i) in standRules.rulesList" :key="i" class="mb-2">
                   {{ ruleItem }}
                 </li>

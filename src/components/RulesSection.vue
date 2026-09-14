@@ -8,7 +8,7 @@
         Bases y Reglas de los Concursos
       </h2>
       <p class="text-subtitle-1 text-medium-emphasis max-w-600 mx-auto">
-        Consulta las normativas oficiales para participar en Cosplay, Karaoke, Dibujo y alquiler de Stands.
+        Consulta las normativas oficiales para participar en Cosplay, Karaoke y Dibujo
       </p>
     </div>
 
@@ -16,7 +16,6 @@
       <v-tab value="COSPLAY" prepend-icon="mdi-masks-theater" class="font-weight-bold">Cosplay</v-tab>
       <v-tab value="KARAOKE" prepend-icon="mdi-microphone-variant" class="font-weight-bold">Karaoke</v-tab>
       <v-tab value="DRAWING" prepend-icon="mdi-palette" class="font-weight-bold">Dibujo</v-tab>
-      <v-tab value="STAND" prepend-icon="mdi-storefront" class="font-weight-bold">Stands</v-tab>
     </v-tabs>
 
     <v-window v-model="activeTab">

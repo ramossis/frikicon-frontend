@@ -197,7 +197,7 @@
             </div>
 
             <div class="rules-scrollable border pa-3 rounded bg-surface" style="max-height: 180px; overflow-y: auto;">
-              <ul class="pl-4 text-body-2 text-medium-emphasis">
+              <ul class="pl-4 text-body-2 text-white font-weight-medium">
                 <li v-for="(ruleItem, i) in currentRule.rulesList" :key="i" class="mb-2">
                   {{ ruleItem }}
                 </li>
