@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { http } from '@/utils/axios';
 import { dataURLtoFile } from "../utils/dataURLtoFile";
+import imageCompression from 'browser-image-compression'; // <--- Importamos la librería
+
 export const useParticipantStore = defineStore('participants', {
   state: () => ({
     participants: [],
@@ -27,19 +29,35 @@ export const useParticipantStore = defineStore('participants', {
       }
     },
 
- async registerParticipant(payload) {
-  this.loading = true;
-  this.error = null;
-  try {
-    const formData = new FormData();
-    formData.append('fullName', payload.fullName);
-    formData.append('age', payload.age.toString());
-    formData.append('phone', payload.phone);
-    formData.append('category', payload.category);
-    formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
+    async registerParticipant(payload) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const formData = new FormData();
+        formData.append('fullName', payload.fullName);
+        formData.append('age', payload.age.toString());
+        formData.append('phone', payload.phone);
+        formData.append('category', payload.category);
+        formData.append('categoryData', JSON.stringify(payload.categoryData || {}));
 
-   if (payload.photoFile) {
-          const photoFileConverted = dataURLtoFile(payload.photoFile, 'photo.jpg');
+        if (payload.photoFile) {
+          // 1. Convertimos el dataURL a File
+          let photoFileConverted = dataURLtoFile(payload.photoFile, 'photo.jpg');
+
+          // 2. Configuramos la compresión para celulares
+          try {
+            const options = {
+              maxSizeMB: 1,           // Queremos que pese máximo 1 MB
+              maxWidthOrHeight: 1280, // Resolución adecuada para web
+              useWebWorker: true      // Para que no congele la interfaz móvil
+            };
+            
+            // 3. Comprimimos el archivo
+            photoFileConverted = await imageCompression(photoFileConverted, options);
+          } catch (compError) {
+            console.warn('No se pudo comprimir la imagen, enviando original:', compError);
+          }
+
           formData.append('photoUrl', photoFileConverted);
         }
         
@@ -48,16 +66,17 @@ export const useParticipantStore = defineStore('participants', {
           formData.append('audioUrl', audioFileConverted);
         }
 
-    // ELIMINADO EL OBJETO HEADERS: Axios pondrá el multipart/form-data y boundary automáticamente
-    const { data } = await http.post('/participant/register', formData);
-    return data;
-  } catch (err) {
-    this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar participante.';
-    throw err;
-  } finally {
-    this.loading = false;
-  }
-},
+        // Axios pondrá el multipart/form-data y boundary automáticamente
+        const { data } = await http.post('/participant/register', formData);
+        return data;
+      } catch (err) {
+        this.error = err.response?.data?.message || err.response?.data?.error || 'Error al registrar participante.';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async deleteParticipant(id) {
       this.loading = true;
       this.error = null;
